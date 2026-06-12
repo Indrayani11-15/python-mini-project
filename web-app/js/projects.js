@@ -24,6 +24,7 @@ function getProjectHTML(projectName) {
         'nqueens' : getNQueensHTML(),
         'matrix-calculator': () => getMatrixCalculatorHTML(),
         'unit-converter': getUnitConverterHTML(),
+        'resume-analyzer': getResumeAnalyzerHTML(),
         'reverse-hangman': () => getReverseHangmanHTML
     };
     
@@ -53,6 +54,7 @@ function initializeProject(projectName) {
         'nqueens' : initNQueens(),
         'matrix-calculator': initMatrixCalculator,
         'unit-converter':initUnitConverter,
+        'resume-analyzer':initResumeAnalyzer,
         'reverse-hangman': initReverseHangman
     };
     
@@ -3124,7 +3126,7 @@ function initializeProject(projectName) {
     "2048-game": "init2048Game",
     "color-palette": "initColorPalette",
     "math-quiz": "initMathQuiz",
-    "resume-analyzer": "initAIResumeAnalyzer",
+    "resume-analyzer": "initResumeAnalyzer",
     "caesar-cipher": "initCaesarCipher"
   };
 
