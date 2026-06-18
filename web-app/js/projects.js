@@ -1,4 +1,4 @@
-﻿// Project Registry
+// Project Registry
 // Each project's HTML and logic lives in its own file under js/projects/
 
 function getProjectHTML(projectName) {
@@ -28,6 +28,7 @@ function getProjectHTML(projectName) {
         'reverse-hangman': () => getReverseHangmanHTML,
         'snake-game': getSnakeGameHTML(),
         'bubble-sort': getBubbleSortHTML(),
+        'fourier-series': getFourierSeriesHTML()
     };
     
     return projects[projectName] || '<h2>Project Coming Soon!</h2>';
@@ -57,7 +58,8 @@ function initializeProject(projectName) {
         'matrix-calculator': initMatrixCalculator,
         'unit-converter':initUnitConverter,
         'resume-analyzer':initResumeAnalyzer,
-        'reverse-hangman': initReverseHangman
+        'reverse-hangman': initReverseHangman,
+        'fourier-series': initFourierSeries
     };
     
     if (initializers[projectName]) {
@@ -3193,7 +3195,8 @@ function initializeProject(projectName) {
     "war-card-game": "initWarCardGame",
     "number-sliding-puzzle": "initNumberSlidingPuzzle",
     "budget-tracker": "initBudgetTracker",
-    "caesar-cipher": "initCaesarCipher"
+    "caesar-cipher": "initCaesarCipher",
+    "fourier-series": "initFourierSeries"
   };
 
   const initializerName = initializers[projectName];
