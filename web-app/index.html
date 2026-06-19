@@ -1435,6 +1435,7 @@
         const modal = document.getElementById("projectModal");
         const modalBody = document.getElementById("modalBody");
         const modalClose = document.getElementById("modalClose");
+        let previouslyFocusedElement = null;
 
         if (!modal || !modalBody) {
           console.error("Modal elements not found!");
@@ -1451,12 +1452,18 @@
           // Clear modal body
           modalBody.innerHTML = "";
 
+          if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === "function") {
+            previouslyFocusedElement.focus();
+            previouslyFocusedElement = null;
+          }
+
           console.log("Modal closed");
         }
 
         // Function to open modal with project
         window.openProjectModal = function (projectName, triggerElement) {
           console.log("Opening project:", projectName);
+          previouslyFocusedElement = triggerElement || document.activeElement;
 
           // Clear previous content
           modalBody.innerHTML =
