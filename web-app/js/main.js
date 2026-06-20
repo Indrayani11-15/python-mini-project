@@ -1276,6 +1276,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 renderRecentSearches();
             });
         }
+    });
 
     // Clear content
     if (modalBody) {

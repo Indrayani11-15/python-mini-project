@@ -1,4 +1,4 @@
-﻿// Project Registry
+// Project Registry
 // Each project's HTML and logic lives in its own file under js/projects/
 
 function getProjectHTML(projectName) {
@@ -22,7 +22,8 @@ function getProjectHTML(projectName) {
         'morse-code': getMorseCodeHTML(),
         'tower-of-hanoi': getTowerOfHanoiHTML(),
         'nqueens' : getNQueensHTML(),
-        'matrix-calculator': () => getMatrixCalculatorHTML()
+        'matrix-calculator': () => getMatrixCalculatorHTML(),
+        'sudoku-game': getSudokuGameHTML()
     };
     
     return projects[projectName] || '<h2>Project Coming Soon!</h2>';
@@ -48,8 +49,9 @@ function initializeProject(projectName) {
         'derivative-calculator': initDerivativeCalculator,
         'morse-code': initMorseCode,
         'tower-of-hanoi': initTowerOfHanoi,
-        'nqueens' : initNQueens(),
-        'matrix-calculator': initMatrixCalculator
+        'nqueens' : initNQueens,
+        'matrix-calculator': initMatrixCalculator,
+        'sudoku-game': initSudokuGame
     };
     
     if (initializers[projectName]) {
@@ -1552,6 +1554,13 @@ function getFlamesHTML() {
             }
         </style>
     `;
+}
+
+function toPascalCase(str) {
+  return str
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
 }
 
 function getProjectHTML(projectName) {
@@ -3121,7 +3130,8 @@ function initializeProject(projectName) {
     "color-palette": "initColorPalette",
     "math-quiz": "initMathQuiz",
     "resume-analyzer": "initAIResumeAnalyzer",
-    "caesar-cipher": "initCaesarCipher"
+    "caesar-cipher": "initCaesarCipher",
+    "sudoku-game": "initSudokuGame"
   };
 
   const initializerName = initializers[projectName];
