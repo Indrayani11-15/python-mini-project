@@ -3,6 +3,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 import { updateProjectVisibility } from "./modules/utils.js";
+import CopyButton from "./modules/copyButton.js";
 
 const html = document.documentElement;
 const themeToggle = document.getElementById('themeToggle');
@@ -39,39 +40,39 @@ function syncThemeColor(theme) {
 }
 
 function updateThemeToggleAria(isLightTheme) {
-    if (!themeToggle) return;
-    themeToggle.setAttribute(
-        'aria-label',
-        isLightTheme ? 'Switch to dark mode' : 'Switch to light mode'
-    );
+  if (!themeToggle) return;
+  themeToggle.setAttribute(
+    'aria-label',
+    isLightTheme ? 'Switch to dark mode' : 'Switch to light mode'
+  );
 }
 
 if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        syncThemeColor(newTheme);
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    syncThemeColor(newTheme);
 
-        themeToggle.innerHTML =
-            newTheme === 'light'
-                ? '<i class="fas fa-sun" aria-hidden="true"></i>'
-                : '<i class="fas fa-moon" aria-hidden="true"></i>';
-        updateThemeToggleAria(newTheme === 'light');
-    });
+    themeToggle.innerHTML =
+      newTheme === 'light'
+        ? '<i class="fas fa-sun" aria-hidden="true"></i>'
+        : '<i class="fas fa-moon" aria-hidden="true"></i>';
+    updateThemeToggleAria(newTheme === 'light');
+  });
 }
 
 const savedTheme = localStorage.getItem('theme') || 'dark';
 html.setAttribute('data-theme', savedTheme);
 syncThemeColor(savedTheme);
 if (themeToggle) {
-    themeToggle.innerHTML =
-        savedTheme === 'light'
-            ? '<i class="fas fa-sun" aria-hidden="true"></i>'
-            : '<i class="fas fa-moon" aria-hidden="true"></i>';
-    updateThemeToggleAria(savedTheme === 'light');
+  themeToggle.innerHTML =
+    savedTheme === 'light'
+      ? '<i class="fas fa-sun" aria-hidden="true"></i>'
+      : '<i class="fas fa-moon" aria-hidden="true"></i>';
+  updateThemeToggleAria(savedTheme === 'light');
 }
 function escapeHtml(str) {
   var d = document.createElement("div");
@@ -118,10 +119,10 @@ function showInfoModal(title, steps) {
     listEl.appendChild(li);
   });
 
-const toggleBackToTopButton = () => {
+  const toggleBackToTopButton = () => {
     if (!backToTopButton) return;
     backToTopButton.classList.toggle('visible', window.scrollY > 300);
-};
+  };
   overlay.classList.add("active");
 
   function closeModal() {
@@ -131,12 +132,12 @@ const toggleBackToTopButton = () => {
     overlay.removeEventListener("click", overlayClick);
   }
 
-if (backToTopButton) {
+  if (backToTopButton) {
     backToTopButton.addEventListener('click', () => {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     });
-}
+  }
   function overlayClick(e) {
     if (e.target === overlay) closeModal();
   }
@@ -185,6 +186,8 @@ function showConfirm(message, onConfirm, onCancel) {
   document.addEventListener('keydown', keyHandler);
 }
 
+window.showConfirm = showConfirm;
+
 var currentProjectName = "";
 
 function setupModalInfoButton(projectName) {
@@ -207,7 +210,11 @@ function setupModalInfoButton(projectName) {
 /* ── DOMContentLoaded ──────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", function () {
   // Initially hide sidebar - will be shown by IntersectionObserver
+  var pageCategory = document.body.getAttribute("data-page");
   document.body.classList.remove("sidebar-active");
+  if (pageCategory && window.innerWidth >= 1100) {
+    document.body.classList.add("sidebar-active");
+  }
   function repairLegacyHomeLayoutNow() {
     var legacyHost = document.querySelector(".hero-code-snippets")
       ? document.querySelector(".hero-code-snippets").closest(".hero-section")
@@ -352,6 +359,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* ── Mobile Sidebar Close ──────────────────────────────── */
   var mainSidebar = document.getElementById("mainSidebar");
+  var mobileSidebarToggle = document.getElementById("mobileSidebarToggle");
+  if (mobileSidebarToggle && mainSidebar) {
+    mobileSidebarToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var active = mainSidebar.classList.toggle("open");
+      document.body.classList.toggle("sidebar-active", active);
+      mobileSidebarToggle.setAttribute("aria-expanded", active);
+      var icon = mobileSidebarToggle.querySelector("i");
+      if (icon) icon.className = active ? "fas fa-times" : "fas fa-bars";
+    });
+
+    document.addEventListener("click", function (e) {
+      if (
+        mainSidebar &&
+        mobileSidebarToggle &&
+        !mainSidebar.contains(e.target) &&
+        !mobileSidebarToggle.contains(e.target) &&
+        mainSidebar.classList.contains("open")
+      ) {
+        closeMobileSidebar();
+      }
+    });
+  }
+
   var sidebarMobileClose = document.getElementById("sidebarMobileClose");
   var sidebarBackdrop = document.getElementById("sidebarBackdrop");
 
@@ -359,6 +390,12 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.remove("sidebar-active");
     if (mobileMenuToggle) {
       mobileMenuToggle.setAttribute("aria-expanded", "false");
+    }
+    if (mainSidebar) mainSidebar.classList.remove("open");
+    if (mobileSidebarToggle) {
+      mobileSidebarToggle.setAttribute("aria-expanded", "false");
+      var icon = mobileSidebarToggle.querySelector("i");
+      if (icon) icon.className = "fas fa-bars";
     }
   }
 
@@ -403,6 +440,24 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  /* ── Mobile Sidebar Toggle ────────────────────────────────── */
+  if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      document.body.classList.toggle("sidebar-active");
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    if (window.innerWidth < 1100) {
+      var isClickInsideSidebar = mainSidebar && mainSidebar.contains(e.target);
+      var isClickOnToggle = mobileMenuToggle && mobileMenuToggle.contains(e.target);
+      if (!isClickInsideSidebar && !isClickOnToggle && document.body.classList.contains("sidebar-active")) {
+        document.body.classList.remove("sidebar-active");
+      }
+    }
+  });
 
   if (backToTopButton) {
     var toggleBackToTop = function () {
@@ -585,6 +640,17 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ── Sidebar Tabs ─────────────────────────────────────────── */
   sidebarTabs.forEach(function (st) {
     st.addEventListener("click", function () {
+      if (window.innerWidth < 1100) {
+        document.body.classList.remove("sidebar-active");
+        if (mainSidebar) mainSidebar.classList.remove("open");
+        if (mobileSidebarToggle) {
+          mobileSidebarToggle.setAttribute("aria-expanded", "false");
+          var icon = mobileSidebarToggle.querySelector("i");
+          if (icon) icon.className = "fas fa-bars";
+        }
+      }
+    });
+    st.addEventListener("click", function () {
       var category = st.getAttribute("data-category");
 
       var pageCategory = document.body.getAttribute("data-page");
@@ -738,7 +804,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ── Sidebar Active Scroll Observer ───────────────────────── */
   if (!pageCategory && projectsSection) {
     console.log('Setting up sidebar observer');
-
+ 
     const checkAndToggleSidebar = () => {
       if (window.innerWidth <= 768) {
         return;
@@ -748,7 +814,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const heroSection = document.querySelector('.hero-section');
       const heroBottom = heroSection ? heroSection.getBoundingClientRect().bottom : 0;
       const showSidebar = rect.top < window.innerHeight && window.scrollY > heroBottom - 100;
-
+ 
       document.body.classList.toggle("sidebar-active", showSidebar);
       console.log('Sidebar active:', showSidebar, 'scrollY:', window.scrollY);
 
@@ -756,16 +822,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const fixedThemeToggle = document.getElementById("fixed-theme-toggle");
       if (fixedThemeToggle) {
-        if(showSidebar){
+        if (showSidebar) {
           fixedThemeToggle.style.display = "none";
         }
-        else{
+        else {
           fixedThemeToggle.style.display = "block";
         }
       }
 
     };
-
+ 
     window.addEventListener('scroll', checkAndToggleSidebar);
     checkAndToggleSidebar();
   }
@@ -783,7 +849,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var q = query.toLowerCase();
 
       var catMatch = currentCategory === "all" || category === currentCategory;
-      
+
       // FIX FOR ISSUE #1032: Strict Title Matching
       // Removed description and hidden tag fuzzy-matching to prevent irrelevant 
       // projects (like FLAMES Game) from appearing for unrelated queries.
@@ -922,7 +988,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (noResultsMessage) noResultsMessage.style.display = "block";
       return;
     }
-    
+
     if (noResultsMessage) noResultsMessage.style.display = "none";
 
     if (resultsList) {
@@ -936,13 +1002,13 @@ document.addEventListener("DOMContentLoaded", function () {
         var iconBox = document.createElement("div");
         iconBox.className = "dropdown-item-icon";
         var banner = project.card.querySelector(".card-banner");
-        projectCards.forEach(function(card) {
-        var banner = card.querySelector(".card-banner");
-        var title = card.querySelector("h3");
+        projectCards.forEach(function (card) {
+          var banner = card.querySelector(".card-banner");
+          var title = card.querySelector("h3");
 
-        if (banner && title) {
+          if (banner && title) {
             banner.alt = title.textContent.trim() + " project preview";
-        }
+          }
         });
         if (banner) {
           var img = document.createElement("img");
@@ -1275,6 +1341,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function closeProjectSafe() {
     if (!modal) return;
+    if (!modal.classList.contains("active")) return;
 
     modal.classList.remove("active");
     modal.setAttribute("aria-hidden", "true");
@@ -1322,7 +1389,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
-    
     // Clear content
     if (modalBody) {
       modalBody.innerHTML = "";
@@ -1332,8 +1398,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+      var elemToFocus = lastFocusedElement;
       setTimeout(function () {
-        lastFocusedElement.focus({ preventScroll: true });
+        elemToFocus.focus({ preventScroll: true });
       }, 50);
     }
     lastFocusedElement = null;
@@ -1712,35 +1779,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-// Open Project Modal
-projectCards.forEach(card => {
-    card.tabIndex = 0;
-    card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', `Open ${card.querySelector('h3')?.textContent || 'project'}`);
 
-    const playButton = card.querySelector('.btn-play');
-    
-    if (playButton) {
-        playButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const projectName = card.getAttribute('data-project');
-            openProject(projectName);
-        });
-    }
-
-    card.addEventListener('click', () => {
-        const projectName = card.getAttribute('data-project');
-        openProject(projectName);
-    });
-
-    card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            const projectName = card.getAttribute('data-project');
-            openProject(projectName);
-        }
-    });
-});
     /* ── Activate item based on viewport center crossing timeline dots ── */
     var activeIdx = -1;
     var dots = document.querySelectorAll(".timeline-dot");

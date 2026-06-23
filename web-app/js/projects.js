@@ -23,12 +23,18 @@ function getProjectHTML(projectName) {
         'tower-of-hanoi': getTowerOfHanoiHTML(),
         'nqueens' : getNQueensHTML(),
         'matrix-calculator': () => getMatrixCalculatorHTML(),
+        'sudoku-game': getSudokuGameHTML(),
         'unit-converter': getUnitConverterHTML(),
         'resume-analyzer': getResumeAnalyzerHTML(),
         'reverse-hangman': () => getReverseHangmanHTML,
+        'budget-tracker': getBudgetTrackerHTML(),
         'snake-game': getSnakeGameHTML(),
         'bubble-sort': getBubbleSortHTML(),
-        'fourier-series': getFourierSeriesHTML()
+        'quick-sort': getQuickSortHTML(),
+        'fourier-series': getFourierSeriesHTML(),
+        'merge-sort': getMergeSortHTML(),
+        'pathfinding-visualizer': getPathfindingVisualizerHTML(),
+        'tsp-visualizer': getTspVisualizerHTML()
     };
     
     return projects[projectName] || '<h2>Project Coming Soon!</h2>';
@@ -54,12 +60,17 @@ function initializeProject(projectName) {
         'derivative-calculator': initDerivativeCalculator,
         'morse-code': initMorseCode,
         'tower-of-hanoi': initTowerOfHanoi,
-        'nqueens' : initNQueens(),
+        'nqueens' : initNQueens,
         'matrix-calculator': initMatrixCalculator,
-        'unit-converter':initUnitConverter,
-        'resume-analyzer':initResumeAnalyzer,
+        'sudoku-game': initSudokuGame,
+        'unit-converter': initUnitConverter,
+        'resume-analyzer': initResumeAnalyzer,
         'reverse-hangman': initReverseHangman,
-        'fourier-series': initFourierSeries
+        'budget-tracker': initBudgetTracker,
+        'fourier-series': initFourierSeries,
+        'merge-sort': initMergeSort,
+        'pathfinding-visualizer': initPathfindingVisualizer,
+        'tsp-visualizer': initTspVisualizer
     };
     
     if (initializers[projectName]) {
@@ -1563,6 +1574,22 @@ function getFlamesHTML() {
         </style>
     `;
 }
+function toPascalCase(str) {
+  if (str === "nqueens") return "NQueens";
+  return str
+    .split("-")
+    .map(function (word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join("");
+}
+
+function toPascalCase(str) {
+  return str
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
+}
 
 function getProjectHTML(projectName) {
   const fnName = "get" + toPascalCase(projectName) + "HTML";
@@ -1836,6 +1863,24 @@ const projectInstructions = {
       "Watch the sorting visualization"
     ]
   },
+  "quick-sort": {
+  title: "⚡ How Quick Sort Works",
+  steps: [
+    "Enter an array of numbers",
+    "A pivot element is chosen",
+    "Smaller elements go left, larger go right",
+    "Process repeats until fully sorted"
+  ]
+},
+"merge-sort": {
+  title: "🔀 How Merge Sort Works",
+  steps: [
+    "Enter an array of numbers",
+    "Array is divided into two halves",
+    "Each half is recursively sorted",
+    "Sorted halves are merged back together"
+  ]
+},
   "tower-of-hanoi": {
     title: "🗼 How to Solve Tower of Hanoi",
     steps: [
@@ -3167,6 +3212,8 @@ function initializeProject(projectName) {
     fibonacci: "initFibonacci",
     "binary-search": "initBinarySearch",
     "bubble-sort": "initBubbleSort",
+    "quick-sort": "initQuickSort",
+    "merge-sort": "initMergeSort",
     "progression-recognizer": "initProgressionRecognizer",
     "pascal-triangle": "initPascalTriangle",
     armstrong: "initArmstrong",
@@ -3190,13 +3237,17 @@ function initializeProject(projectName) {
     "2048-game": "init2048Game",
     "color-palette": "initColorPalette",
     "math-quiz": "initMathQuiz",
+    "resume-analyzer": "initAIResumeAnalyzer",
+    "caesar-cipher": "initCaesarCipher",
+    "sudoku-game": "initSudokuGame",
     "resume-analyzer": "initResumeAnalyzer",
     "caesar-cipher": "initCaesarCipher",
     "war-card-game": "initWarCardGame",
     "number-sliding-puzzle": "initNumberSlidingPuzzle",
     "budget-tracker": "initBudgetTracker",
-    "caesar-cipher": "initCaesarCipher",
-    "fourier-series": "initFourierSeries"
+    "fourier-series": "initFourierSeries",
+    "pathfinding-visualizer": "initPathfindingVisualizer",
+    "tsp-visualizer": "initTspVisualizer"
   };
 
   const initializerName = initializers[projectName];
