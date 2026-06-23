@@ -357,6 +357,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function closeMobileSidebar() {
     document.body.classList.remove("sidebar-active");
+    if (mobileMenuToggle) {
+      mobileMenuToggle.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener("click", function () {
+      var isActive = document.body.classList.toggle("sidebar-active");
+      mobileMenuToggle.setAttribute("aria-expanded", isActive);
+    });
+  }
+
+  if (window.innerWidth <= 768) {
+    closeMobileSidebar();
   }
 
   if (sidebarMobileClose) {
@@ -579,6 +593,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (category === pageCategory) {
           var grid = document.getElementById("projectsGrid");
           if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (window.innerWidth <= 768) {
+            closeMobileSidebar();
+          }
           return;
         }
       }
@@ -604,6 +621,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (pageCategory && category === pageCategory) {
         var grid = document.getElementById("projectsGrid");
         if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (window.innerWidth <= 768) {
+          closeMobileSidebar();
+        }
         return;
       }
 
@@ -625,6 +645,9 @@ document.addEventListener("DOMContentLoaded", function () {
             behavior: "smooth",
             block: "start",
           });
+      }
+      if (window.innerWidth <= 768) {
+        closeMobileSidebar();
       }
     });
   });
@@ -717,6 +740,9 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log('Setting up sidebar observer');
 
     const checkAndToggleSidebar = () => {
+      if (window.innerWidth <= 768) {
+        return;
+      }
       const rect = projectsSection.getBoundingClientRect();
       // Show sidebar when projects section is in view AND we're scrolled past hero
       const heroSection = document.querySelector('.hero-section');
@@ -729,11 +755,13 @@ document.addEventListener("DOMContentLoaded", function () {
       // Hide fixed-theme-toggle if sidebar is active
 
       const fixedThemeToggle = document.getElementById("fixed-theme-toggle");
-      if(showSidebar){
-        fixedThemeToggle.style.display = "none";
-      }
-      else{
-        fixedThemeToggle.style.display = "block";
+      if (fixedThemeToggle) {
+        if(showSidebar){
+          fixedThemeToggle.style.display = "none";
+        }
+        else{
+          fixedThemeToggle.style.display = "block";
+        }
       }
 
     };
