@@ -1433,6 +1433,14 @@ document.addEventListener("DOMContentLoaded", function () {
   window.closeProjectSafe = closeProjectSafe;
   window.setMainInert = setMainInert;
 
+  function updateFavoritesCountBadge() {
+    const badge = document.getElementById("favoritesCountBadge");
+    if (!badge) return;
+
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    badge.textContent = `(${favorites.length})`;
+  }
+
   /* ═══════════════════════════════════════════════════════════════
        WIRE PROJECT CARDS
        ═══════════════════════════════════════════════════════════════ */
@@ -1474,6 +1482,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       localStorage.setItem("favorites", JSON.stringify(favs));
+      updateFavoritesCountBadge();
     });
 
     var cardActions = card.querySelector(".card-actions");
@@ -1541,6 +1550,8 @@ document.addEventListener("DOMContentLoaded", function () {
   window.wireProjectCard = wireProjectCard;
 
   projectCards.forEach(wireProjectCard);
+
+  updateFavoritesCountBadge();
 
   window.updateRecentlyViewed = function () {
     var grid = document.getElementById("recentlyViewedGrid");
